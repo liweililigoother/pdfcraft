@@ -146,3 +146,24 @@ const nextConfig = {
 };
 
 export default withNextIntl(nextConfig);
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // 确保在客户端构建时不包含 canvas
+      config.resolve.alias.canvas = false;
+    }
+    
+    // 关键部分：处理 pdfjs-dist 尝试加载 Node 原生模块的问题
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      canvas: false,
+      fs: false,
+      path: false,
+    };
+    
+    return config;
+  },
+};
+
+export default nextConfig;
